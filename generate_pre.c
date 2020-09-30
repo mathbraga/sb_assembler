@@ -15,7 +15,7 @@ void generate_pre(char * filename){
     printf("%s\n", new_file_name);
 
     old_file = fopen(filename, "r");
-    new_file = fopen(new_file_name, "w+");
+    new_file = fopen(new_file_name, "w");
 
     if(old_file == NULL){
         perror("Error while opening the file.\n");
