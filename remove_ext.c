@@ -13,7 +13,9 @@ char* remove_ext(char* filename){
         if(filename[i] == '.'){
             for(int j = 0; j < i; j++)
                 no_ext[j] = filename[j];
-            return no_ext;
+            strcpy(filename, no_ext);
+            free(no_ext);
+            break;
         }
     }
 
