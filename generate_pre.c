@@ -35,9 +35,13 @@ void generate_pre(char * filename){
 
     while((ch = fgetc(old_file)) != EOF){
         switch (ch){
+            case '\r':
+                break;
             case '\n':
-                fprintf(new_file, "%c", ch);
-                nl_flag = 1;
+                if(!nl_flag){
+                    fprintf(new_file, "%c", ch);
+                    nl_flag = 1;
+                }
                 break;
             case 32: // white space
                 if(!ws_flag && !nl_flag && !nextIsLine(old_file) && !nextIsSpace(old_file) && !nextIsEOF(old_file)){
