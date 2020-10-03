@@ -3,7 +3,7 @@
 #include <string.h>
 #include "generate_pre.h"
 #include "remove_ext.c"
-#include "nextLineOrEOF.c"
+#include "checkNextLine.c"
 
 void generate_pre(char * filename){
     char ch, *new_file_name, *old_file_name;
@@ -35,14 +35,12 @@ void generate_pre(char * filename){
 
     while((ch = fgetc(old_file)) != EOF){
         switch (ch){
-            // case '\r':
-            //     break;
             case '\n':
                 fprintf(new_file, "%c", ch);
                 nl_flag = 1;
                 break;
             case 32: // white space
-                if(!ws_flag && !nl_flag && !nextLineOrEOF(old_file)){
+                if(!ws_flag && !nl_flag && !nextIsLine(old_file) && !nextIsSpace(old_file) && !nextIsEOF(old_file)){
                     fprintf(new_file, "%c", ch);
                     ws_flag = 1;
                 }
