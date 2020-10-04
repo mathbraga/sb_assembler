@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "generate_pre.c"
+#include "generatePre.c"
 
 int main(int argc, char **argv){
     int comp_pre, comp_obj = 1;
@@ -9,7 +9,7 @@ int main(int argc, char **argv){
     comp_obj = strcmp(argv[1], "-o");
 
     if(!comp_pre)
-        generate_pre(argv[2]);
+        generatePre(argv[2]);
     else if(!comp_obj)
         printf("generate object\n");
 

@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "generate_pre.h"
-#include "remove_ext.c"
+#include "generatePre.h"
+#include "removeExt.c"
 #include "checkNextLine.c"
 #include "skipfunc.c"
 
-void generate_pre(char * filename){
+void generatePre(char * filename){
     char ch, move1, *new_file_name, *old_file_name;
     int ws_flag = 1, nl_flag = 1, len = 0, ln = 0, sp = 0, endf = 0, com = 0;
     FILE *old_file, *new_file;
@@ -16,7 +16,7 @@ void generate_pre(char * filename){
     old_file_name = (char*) malloc(len);
 
     strcpy(old_file_name, filename);
-    strcpy(new_file_name, remove_ext(filename));
+    strcpy(new_file_name, removeExt(filename));
     strcat(new_file_name, ".pre");
 
     printf("%s\n", new_file_name);

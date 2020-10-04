@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char* remove_ext(char* filename){
+char* removeExt(char* filename){
     int len = 0;
     char* no_ext;
 
