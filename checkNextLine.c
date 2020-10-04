@@ -40,3 +40,29 @@ int nextIsEOF(FILE *fp){
 
     return res;
 }
+
+int nextIsTab(FILE *fp){
+    char c;
+    int res = 0;
+
+    c = fgetc(fp);
+    if(c == '\t'){
+        res = 1;
+    }
+    ungetc(c, fp);
+
+    return res;
+}
+
+int nextIsComment(FILE *fp){
+    char c;
+    int res = 0;
+
+    c = fgetc(fp);
+    if(c == 59){
+        res = 1;
+    }
+    ungetc(c, fp);
+
+    return res;
+}

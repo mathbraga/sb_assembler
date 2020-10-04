@@ -4,10 +4,11 @@
 #include "generate_pre.h"
 #include "remove_ext.c"
 #include "checkNextLine.c"
+#include "skipfunc.c"
 
 void generate_pre(char * filename){
-    char ch, *new_file_name, *old_file_name;
-    int ws_flag = 1, nl_flag = 1, len = 0;
+    char ch, move1, *new_file_name, *old_file_name;
+    int ws_flag = 1, nl_flag = 1, len = 0, ln = 0, sp = 0, endf = 0, com = 0;
     FILE *old_file, *new_file;
 
     len = (unsigned)strlen(filename);
@@ -34,23 +35,39 @@ void generate_pre(char * filename){
     }
 
     while((ch = fgetc(old_file)) != EOF){
+        // printf("%d\n", ch);
         switch (ch){
             case '\r':
                 break;
             case '\n':
-                if(!nl_flag){
+                if(!nl_flag && !nextIsEOF(old_file) && !nextIsLine(old_file)){
                     fprintf(new_file, "%c", ch);
                     nl_flag = 1;
                 }
                 break;
             case 32: // white space
-                if(!ws_flag && !nl_flag && !nextIsLine(old_file) && !nextIsSpace(old_file) && !nextIsEOF(old_file)){
+                if(nextIsTab(old_file)){
+                    skipAllTabs(old_file);
+                }
+                ln = nextIsLine(old_file);
+                sp = nextIsSpace(old_file);
+                endf = nextIsEOF(old_file);
+                com = nextIsComment(old_file);
+                if(!ws_flag && !nl_flag && !ln && !sp && !endf && !com){
                     fprintf(new_file, "%c", ch);
                     ws_flag = 1;
                 }
-                else if(!ws_flag && nl_flag){
+                else if(nl_flag){
                     ws_flag = 1;
-                    nl_flag = 0;
+                }
+                break;
+            case '\t':
+                break;
+            case ';':
+                skipAllComments(old_file);
+                if(nextIsLine(old_file)){
+                    fprintf(new_file, "\n");
+                    nl_flag = 1;
                 }
                 break;
             default:
