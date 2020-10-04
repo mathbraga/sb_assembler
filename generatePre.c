@@ -65,10 +65,10 @@ void generatePre(char * filename){
                 break;
             case ';':
                 skipAllComments(old_file);
-                if(nextIsLine(old_file)){
-                    fprintf(new_file, "\n");
-                    nl_flag = 1;
-                }
+                // if(nextIsLine(old_file)){
+                //     fprintf(new_file, "\n");
+                //     nl_flag = 1;
+                // }
                 break;
             default:
                 fprintf(new_file, "%c", ch);
