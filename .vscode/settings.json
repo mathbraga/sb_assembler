@@ -38,6 +38,8 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "string": "cpp",
-        "cctype": "cpp"
+        "cctype": "cpp",
+        "map": "cpp",
+        "xtree": "cpp"
     }
 }

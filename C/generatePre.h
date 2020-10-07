@@ -1,1 +1,0 @@
-void edit_file(char *);

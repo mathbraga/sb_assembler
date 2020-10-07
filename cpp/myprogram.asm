@@ -3,13 +3,14 @@
 L1:   	EQU 		1
 
 
-L1: ;blasjdhljacl ashdcgqyweglcajkb 		ksjdhlfakjs
+L2: ;blasjdhljacl ashdcgqyweglcajkb 		ksjdhlfakjs
 
 
 EQU 0
 
 
-SECTION    			TEXT
+
+section    			TEXT
 
 SWAP: MACRO &A, &B, &T
 	COPY &A, &T
@@ -20,10 +21,10 @@ SWAP: MACRO &A, &B, &T
 IF L1
 	LOAD SPACE ;faz esta opera¸c~ao se L1 for verdadeiro
 
-IF L2
+if l2
 	INPUT SPACE ;faz esta opera¸c~ao se L2 for verdadeiro
 
-INPUT N
+input n
 LOAD N
 FAT: SUB ONE
 JMPZ FIM
@@ -31,7 +32,7 @@ STORE AUX
 MULT N
 STORE N
 LOAD AUX
-JMP FAT
+jmp fat
 FIM: OUTPUT N
 STOP
 SECTION DATA
