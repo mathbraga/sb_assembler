@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
-#include <list>
 #include <map>
 #include "generatePre.hpp"
 #include "trimfunc.cpp"
@@ -171,10 +170,10 @@ string treatMACRO(string line, fstream& file, map<string, int>& macroBody, map<s
 }
 
 int expandMacro(string line, map<string, int>& macroBody, map<string, int>& macroArgsCount, map<string, string>& macroArgs, fstream& source, fstream& output){
-    string aux, args, input_line, params = " ", params_aux, sub_arg;
+    string aux, args, input_line, params = " ", params_aux, sub_arg, label = "";
     map<string, int>::iterator bodyKey;
     map<string, string> arg_list;
-    int exp_flag = 0, n_args = 0, wp = 0;
+    int exp_flag = 0, n_args = 0, wp = 0, ecom = 0, line_args = 0;
     size_t pos = 0;
 
     input_line = line;
@@ -184,46 +183,72 @@ int expandMacro(string line, map<string, int>& macroBody, map<string, int>& macr
         source.seekg(macroBody[aux]);
         n_args = macroArgsCount[aux];
         getline(source, line);
+
         while(line != "ENDMACRO"){
+            if((pos = line.find(":")) != string::npos){
+                label = line.substr(0, pos+2);
+                line.erase(0, pos+2);
+            }
+            else label = "";
+
+            line_args = count(line.begin(), line.end(), '&');
+
             if(n_args){
-                args = macroArgs[aux];
-                if(n_args == 1){
-                    if((pos = line.find(" "+args)) != string::npos){
+                if(line_args){
+                    args = macroArgs[aux];
+                    if(n_args == 1){
+                        if((pos = line.find(" "+args)) != string::npos){
+                            params = input_line.substr(input_line.find_first_of(" ")+1, input_line.length()-(input_line.find_first_of(" ")+1));
+                            line.replace(pos+1, args.length(), params);
+                        }
+                    }
+                    else if(n_args == 2){//unefficient and lazy way of replacing macro parameters by its respective inputs, but it works...
+                        sub_arg = args.substr(0, args.rfind("&"));
                         params = input_line.substr(input_line.find_first_of(" ")+1, input_line.length()-(input_line.find_first_of(" ")+1));
-                        line.replace(pos+1, args.length(), params);
-                    }
-                }
-                else if(n_args == 2){//unefficient and lazy way of replacing macro parameters by its respective inputs, but it works...
-                    sub_arg = args.substr(0, args.rfind("&"));
-                    params = input_line.substr(input_line.find_first_of(" ")+1, input_line.length()-(input_line.find_first_of(" ")+1));
-                    params.erase(params.find_first_of(","), 1);
-                    arg_list[sub_arg]=params.substr(0, params.find_first_of(" "));
+                        params.erase(params.find_first_of(","), 1);
+                        arg_list[sub_arg]=params.substr(0, params.find_first_of(" "));
 
-                    args.erase(0, args.rfind("&"));
-                    params.erase(0, params.find_first_of(" ")+1);
-                    arg_list[args]=params.substr(0, params.find_first_of(" "));
-                    
-                    wp = count(line.begin(), line.end(), ' ');
-                    if(wp == 1){
-                        params_aux = line.substr(line.find_first_of(" ")+1, line.length() - (line.find_first_of(" ")+1));
-                        line.replace(line.find_first_of(" ")+1, params_aux.length(), arg_list[params_aux]);
-                    }
-                    if(wp == 2){
-                        params_aux = line.substr(line.find_first_of(" ")+1, line.find_first_of(",")-(line.find_first_of(" ")+1));
-                        line.replace(line.find_first_of(" ")+1, params_aux.length(), arg_list[params_aux]);
+                        args.erase(0, args.rfind("&"));
+                        params.erase(0, params.find_first_of(" ")+1);
+                        arg_list[args]=params.substr(0, params.find_first_of(" "));
+                        
+                        wp = count(line.begin(), line.end(), ' ');
+                        if(wp == 1){
+                            params_aux = line.substr(line.find_first_of(" ")+1, line.length() - (line.find_first_of(" ")+1));
+                            line.replace(line.find_first_of(" ")+1, params_aux.length(), arg_list[params_aux]);
+                        }
+                        if(wp == 2){
+                            ecom = count(line.begin(), line.end(), '&');
+                            if(ecom == 1){
+                                params_aux = line.substr(0, line.find_first_of(","));
+                                if((pos = line.find("&"))!=string::npos){
+                                    params_aux = line.substr(line.find_first_of("&"), line.find_first_of(",")-(line.find_first_of("&")));
+                                    line.replace(line.find_first_of("&"), params_aux.length(), arg_list[params_aux]);
+                                }
+                                else{
+                                    params_aux = line.substr(line.find_first_of("&"), line.length()-(line.find_first_of("&")));
+                                    line.replace(line.find_first_of("&"), params_aux.length(), arg_list[params_aux]);
+                                }
+                            }
+                            else if(ecom == 2){
+                                params_aux = line.substr(line.find_first_of(" ")+1, line.find_first_of(",")-(line.find_first_of(" ")+1));
+                                line.replace(line.find_first_of(" ")+1, params_aux.length(), arg_list[params_aux]);
 
-                        params_aux = line.substr(line.find_first_of(",")+2, line.length()-(line.find_first_of(",")+2));
-                        line.replace(line.find_first_of(",")+2, params_aux.length(), arg_list[params_aux]);
+                                params_aux = line.substr(line.find_first_of(",")+2, line.length()-(line.find_first_of(",")+2));
+                                line.replace(line.find_first_of(",")+2, params_aux.length(), arg_list[params_aux]);
+                            }
+                        }
                     }
                 }
             }
-            output << line << endl;
+            output << label << line << endl;
             getline(source, line);
         }
     }
 
     source.clear();
     source.seekg(0);
+    arg_list.clear();
 
     return exp_flag;
 }

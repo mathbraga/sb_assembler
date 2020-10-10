@@ -1,5 +1,6 @@
 montador
 myprogram.pre
+myprogram.obj
 stringify
 test*
 .vscode
