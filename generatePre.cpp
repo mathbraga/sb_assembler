@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <map>
 #include "generatePre.hpp"
-#include "trimfunc.cpp"
-#include "allCaps.cpp"
+#include "trimfunc.hpp"
+#include "allCaps.hpp"
 using namespace std;
 
 void generatePre(string filename){
@@ -29,7 +29,7 @@ void generatePre(string filename){
     while(getline(infile, line)){ //remove unnecessary
         found = line.find_first_not_of(" \f\n\r\t\v");
         if(found != string::npos){
-            line = trim(line);
+            line = trimAll(line);
             line.erase(remove(line.begin(), line.end(), '\t'), line.end());
             line = removeInBetween(line);
             line = removeComment(line);

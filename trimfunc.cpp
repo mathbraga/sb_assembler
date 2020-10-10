@@ -1,20 +1,21 @@
 #include <iostream>
 #include <string>
+#include "trimfunc.hpp"
 using namespace std;
 
-inline string trimRight(const string& s, const string& delimiters = " \f\n\r\t\v"){
+string trimRight(const string& s, string delimiters){
   return s.substr(0, s.find_last_not_of(delimiters) + 1);
 }
 
-inline string trimLeft(const string& s, const string& delimiters = " \f\n\r\t\v"){
+string trimLeft(const string& s, string delimiters){
   return s.substr(s.find_first_not_of(delimiters));
 }
 
-inline string trim(const string& s, const string& delimiters = " \f\n\r\t\v"){
+string trimAll(const string& s, string delimiters){
   return trimLeft(trimRight(s, delimiters), delimiters);
 }
 
-string removeInBetween(const string &s){
+string removeInBetween(const string& s){
   string out;
   int flag = 0, len = 0, i = 0;
 
@@ -33,7 +34,7 @@ string removeInBetween(const string &s){
   return out;
 }
 
-string removeComment(const string &s){
+string removeComment(const string& s){
   string out;
   int len = 0, i = 0;
   size_t pos;

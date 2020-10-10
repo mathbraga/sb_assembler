@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include "generatePre.cpp"
-#include "generateObj.cpp"
+#include "generatePre.hpp"
+#include "generateObj.hpp"
 using namespace std;
 
 int main (int argc, char **argv) {
