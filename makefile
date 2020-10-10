@@ -14,6 +14,7 @@ generateObj.o:
 
 montador: trimfunc.o allCaps.o generatePre.o generateObj.o montador.cpp
 	g++ -Wall -o montador trimfunc.o allCaps.o generatePre.o generateObj.o montador.cpp
+	rm trimfunc.o allCaps.o generatePre.o generateObj.o
 
 clean: 
-	rm trimfunc.o allCaps.o generatePre.o generateObj.o
+	rm montador

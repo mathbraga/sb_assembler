@@ -20,6 +20,11 @@ void generatePre(string filename){
 
     infile.open(filename, std::fstream::in | std::fstream::out);
 
+    if(!infile){
+        cerr << "File not found." << endl;
+        return;
+    }
+
     found = filename.rfind(ext);
     filename.replace(found, ext.length(), ".pre");
 
