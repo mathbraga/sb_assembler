@@ -53,7 +53,7 @@ void generateObj(string filename){
     infile.clear();
     infile.seekg(0);
 
-    while(getline(infile, line)){
+    while(getline(infile, line)){//second transition
         if((line != "SECTION TEXT") && (line != "SECTION DATA")){
             if((pos = line.find(":")) != string::npos)// remove label from line
                 line.erase(0, pos+2);
@@ -68,13 +68,13 @@ void generateObj(string filename){
             }
 
             n_op = ops[inst];
-            if(n_op == 1){
+            if(n_op == 1){//replace parameters in case there is only 1
                 op1 = line.substr(line.find_first_of(" ")+1, line.length()-(line.find_first_of(" ")+1));
                 if((search_size = labels.find(op1)) != labels.end())
                     line.replace(line.find_first_of(" ")+1, op1.length(), to_string(labels[op1]));
             }
 
-            else if(n_op == 2){
+            else if(n_op == 2){//replace parameters in case there are 2
                 op1 = line.substr(line.find_first_of(" ")+1, line.find_first_of(",")-(line.find_first_of(" ")+1));
                 op2 = line.substr(line.find_first_of(",")+2, line.length()-(line.find_first_of(",")+2));
                 if((search_size = labels.find(op1)) != labels.end())
@@ -154,7 +154,3 @@ void createMaps(map<string, string>& opcode, map<string, int>& inst_size, map<st
     ops["STOP"]=0;
     ops["SPACE"]=0;
 }
-
-// string translateInst(string line, int& pos_count, int& line_count){
-
-// }

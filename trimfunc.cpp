@@ -3,19 +3,19 @@
 #include "trimfunc.hpp"
 using namespace std;
 
-string trimRight(const string& s, string delimiters){
+string trimRight(const string& s, string delimiters){//remove unnecessary from the right
   return s.substr(0, s.find_last_not_of(delimiters) + 1);
 }
 
-string trimLeft(const string& s, string delimiters){
+string trimLeft(const string& s, string delimiters){//remove unnecessary from the left
   return s.substr(s.find_first_not_of(delimiters));
 }
 
-string trimAll(const string& s, string delimiters){
+string trimAll(const string& s, string delimiters){//remove unnecessary from both sides
   return trimLeft(trimRight(s, delimiters), delimiters);
 }
 
-string removeInBetween(const string& s){
+string removeInBetween(const string& s){//remove unnecessary white spaces in between valid tokens
   string out;
   int flag = 0, len = 0, i = 0;
 
@@ -34,7 +34,7 @@ string removeInBetween(const string& s){
   return out;
 }
 
-string removeComment(const string& s){
+string removeComment(const string& s){//remove everything from the line after a ";"
   string out;
   int len = 0, i = 0;
   size_t pos;

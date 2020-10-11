@@ -49,7 +49,7 @@ void generatePre(string filename){
     preEQU.seekg(0);
     preMACRO.open("preMACRO.txt", fstream::in | fstream::out | fstream::trunc);
 
-    while(getline(preEQU, line)){
+    while(getline(preEQU, line)){//steps preceding EQU
         if(line == "SECTION TEXT")
             st_flag = 1;
         if(!st_flag){
@@ -74,7 +74,7 @@ void generatePre(string filename){
     labelsMap.clear();
     preExpand.open("preExpand.txt", fstream::in | fstream::out | fstream::trunc);
 
-    while(getline(preMACRO, line)){
+    while(getline(preMACRO, line)){//steps preceding MACRO
         if((found = line.find(':')) != string::npos)
             line = treatMACRO(line, preMACRO, macroBody, macroArgsCount, macroArgs);
         if(line != "ENDMACRO"){
@@ -87,7 +87,7 @@ void generatePre(string filename){
     preExpand.clear();
     preExpand.seekg(0);
 
-    while(getline(preExpand, line)){
+    while(getline(preExpand, line)){//expand MACRO
         exp_flag = 0;
         if(line == "SECTION DATA")
             sd_flag = 1;
@@ -141,16 +141,16 @@ string treatMACRO(string line, fstream& file, map<string, int>& macroBody, map<s
     if((pos = line.find(':')) != string::npos)
         label = line.substr(0, pos);
 
-    pos = line.find(" "+keyword);
+    pos = line.find(" "+keyword);//find " MACRO"
     if(pos == string::npos){
         offset--;
         checkpoint = file.tellg();
         getline(file, line);
-        pos = line.find(keyword+" ");
+        pos = line.find(keyword+" ");//next line then find "MACRO "
     }
 
     if(pos == string::npos){
-        pos = line.find(keyword);
+        pos = line.find(keyword);//find "MACRO"
         space_flag = 0;
     }
 
@@ -174,6 +174,7 @@ string treatMACRO(string line, fstream& file, map<string, int>& macroBody, map<s
     return line;
 }
 
+//swap macro call with its body and respective parameters
 int expandMacro(string line, map<string, int>& macroBody, map<string, int>& macroArgsCount, map<string, string>& macroArgs, fstream& source, fstream& output){
     string aux, args, input_line, params = " ", params_aux, sub_arg, label = "";
     map<string, int>::iterator bodyKey;
